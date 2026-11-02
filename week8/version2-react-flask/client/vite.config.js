@@ -9,7 +9,7 @@ export default defineConfig(({ mode }) => {
             port: Number(env.CLIENT_PORT || 5173),
             // the browser only ever talks to the vite origin, so the session cookie stays same-origin (no cors needed)
             proxy: {
-                '/api': env.API_PROXY_TARGET || 'http://localhost:4000',
+                '/api': env.API_PROXY_TARGET || 'http://127.0.0.1:5001',
             },
         },
     };

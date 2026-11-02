@@ -1,0 +1,21 @@
+# os / editor
+.DS_Store
+.vscode/
+.idea/
+
+# node
+node_modules/
+dist/
+
+# python
+venv/
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# secrets and local databases
+.env
+*.db
+*.db-wal
+*.db-shm

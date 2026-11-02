@@ -43,3 +43,33 @@ Timestamps come from `date` on my machine (EDT).
 - Decided: V2 reuses the V1 React client unchanged except for the proxy port.
 - Decided: write `bolt-prompt.md` early (before/alongside V2) so I can run Bolt in parallel.
 - Resume instructions saved in `resume-prompt.md`.
+
+## 2026-10-30: moved to the shared repo
+- My partner (GitHub: GalaxyResonance-BA) and I now share https://github.com/GalaxyResonance-BA/RPG-gametracker_SWEPRAC-QU. All work from here on happens in that clone. The old copy in modern-software-dev-assignments/week8 is no longer updated.
+
+## 2026-11-02 (partner): V2 client and first Bolt prompt
+- My partner pushed `dc67202 "V2 + bolt prompt"`: a copy of the V1 React client in `version2-react-flask/client/` and a first draft of `bolt-prompt.md`. The Flask server wasn't started yet.
+- That commit also included `client/node_modules/` (555 files, from Windows) and `client/dist/`.
+
+## 2026-11-02 17:21 EST: Phase 2 (V2: Flask) started
+- Repo cleanup: added a root `.gitignore` (.DS_Store, node_modules, dist, venv, __pycache__, .env, *.db), and untracked node_modules/dist/week8/.DS_Store with `git rm --cached` (the files stay on disk). The `.DS_Store` files inside `rpg-character-creator/` were left alone (that folder is never modified).
+- Only Python 3.14 (system) and 3.12 (uv) are on this machine. The venv uses 3.14, the code avoids anything newer than 3.11, and the tests were also run on 3.12.
+- Problem: **macOS AirPlay Receiver listens on port 5000** (`lsof` showed ControlCenter; `curl` got `403 AirTunes`). Fix: V2 defaults to port 5001 instead of the planned 5000.
+- Built `server/`: Flask 3.1.3, bcrypt 5.0.0, python-dotenv 1.2.4 (pinned), the same schema.sql, the same API contract, field rules and error messages as V1. Each request gets its own SQLite connection (Flask is threaded), and the count+insert runs inside BEGIN IMMEDIATE.
+- **V2 API first ran: 2026-11-02 17:26 EST.** All 19 pytest tests (ported from V1 plus a threaded race test) passed on the first run, about 5 minutes after starting.
+- I didn't trust a first-try pass, so I removed the write lock on purpose: the 2-process race test failed (18 characters on a 10-character plan), so it really catches the bug. The in-process threaded test still passed without the lock (the GIL makes that race rare), so the 2-process test is the real proof. Lock restored, 19/19 again, and 19/19 on Python 3.12.
+- Problem: bcrypt 5 throws on passwords over 72 bytes (bcryptjs in V1 cuts them short). Login now returns a clean 401 for those, and a test covers it.
+- Problem: the committed `node_modules/.bin/vite` had no execute permission and was a Windows shim calling `node.exe`, and the native rolldown binary was win32-only. Root cause: node_modules was committed from Windows. Fix: untracked it, ran `npm install` (adds the macOS binaries), and ran vite via `node node_modules/vite/bin/vite.js` locally. A fresh clone plus `npm install` doesn't have this problem.
+- Client: the proxy now points to `http://127.0.0.1:5001`, because Flask binds IPv4 only and Node may resolve `localhost` to `::1`. Nothing else in the client changed.
+- **V2 full app (React → Vite proxy → Flask) first ran and all core UI features worked: 2026-11-02 ~17:29 EST.** Headless Chrome: all 11 checks passed (register, plan, character with custom attribute, equipment validation, journal, reload, account meter, delete, logout/bad login/login, plan-limit 403 in the UI, downgrade/over-limit). Single-port mode (Flask serving `client/dist`) checked too.
+- A screenshot seemed to show the wrong tab highlighted. Root cause: the original design's 0.3s color transition, captured mid-fade. After 600ms it's correct, so it isn't a bug.
+- V1 rechecked in the new location: npm install, 19/19 tests pass, client builds.
+- Rewrote `bolt-prompt.md`:
+  - plan limit as a Postgres BEFORE INSERT trigger with a row lock, raising ERRCODE 42501 (PostgREST returns 403)
+  - plan changes only through a `change_plan` security-definer function, with history
+  - RLS on every table, including the child tables via the parent character
+  - CHECK constraints matching the V1 validation rules
+  - the exact color/font tokens from style.css (the earlier draft said "parchment", but the real palette is dark indigo with gold)
+  - Popular ribbon, D&D defaults button, Powers & Abilities field, pinned versions, `.env.example`
+  - a short checklist for us (turn off email confirmation, minimum password length 8)
+- **Phase 2 done; stopping for my approval.**
