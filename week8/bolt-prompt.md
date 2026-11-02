@@ -2,7 +2,7 @@
 
 > **For us, not for Bolt.** Paste everything below the line into bolt.new. Before testing the result:
 > 1. In Supabase, go to **Authentication → Sign In / Providers → Email** and turn off **Confirm email**, then set the minimum password length to **8**.
-> 2. Run the SQL migration Bolt writes (`supabase/migrations/*.sql`) in the Supabase SQL editor, unless Bolt's Supabase integration has already applied it.
+> 2. Run the SQL migration Bolt writes (`supabase/migrations/*.sql`) in the Supabase SQL editor (we are not using Bolt's Supabase integration, which needs Bolt Pro).
 > 3. Put the project URL and **anon** key in `.env` (never the service-role key).
 > 4. Export the project to `week8/version3-vue-bolt/`.
 >
@@ -20,6 +20,7 @@ Build **"RPG Campaign Chronicles"**, a system-neutral tabletop RPG character man
 - Pin **exact** dependency versions in `package.json` (no `^` or `~`).
 - Supabase URL and anon key come from `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` in `.env`. Commit a `.env.example` and a `.gitignore` (node_modules, dist, .env).
 - Put **all** database setup (tables, constraints, RLS policies, functions, triggers, seed data) in one SQL migration file under `supabase/migrations/`.
+- **Do not use Bolt's Supabase integration** and don't wait for a Supabase connection. Write the migration SQL file and read the keys from `.env`. I will run the SQL myself in the Supabase SQL editor.
 
 ## Visual identity (match the existing design)
 A dark "arcane" theme: deep indigo night background, glowing violet borders, gold headings.
