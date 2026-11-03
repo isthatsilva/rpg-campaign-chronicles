@@ -73,3 +73,18 @@ Timestamps come from `date` on my machine (EDT).
   - Popular ribbon, D&D defaults button, Powers & Abilities field, pinned versions, `.env.example`
   - a short checklist for us (turn off email confirmation, minimum password length 8)
 - **Phase 2 done; stopping for my approval.**
+
+## 2026-11-02 18:55 EST: Phase 3 (V3: bolt.new) first export reviewed
+- I pasted `bolt-prompt.md` into bolt.new (free plan; Bolt's Supabase connection needs Pro, so I didn't use it) and exported to `version3-vue-bolt/project/`.
+- Review result: **Bolt produced a polished UI mockup, not a working app.**
+  - Login was faked with `setTimeout`, and all characters/equipment/journal/plans were hardcoded sample data in a single 19 KB `App.vue`.
+  - Only `supabase.auth.getUser()` was ever called.
+  - The design matched the prompt well: magic border, corners, Popular ribbon, D&D defaults button, phone layout. It builds without errors.
+- The SQL migration was mostly correct: 7 tables with CHECK constraints, a signup trigger (profile + Free subscription), a plan-limit trigger with a row lock raising 42501, `change_plan` with history, and RLS on every table.
+- Problems found in the SQL:
+  - a policy loop includes `characters`, which has no `character_id`, so the script would fail partway
+  - Free was renamed "Wanderer"
+  - health can't be negative
+- Likely cause of the mockup: without a connected database, Bolt filled screens with sample data, and my "don't use Bolt's Supabase integration" line probably pushed it further that way. The prompt was also very large for the free plan's output limit, and it never said "no fake data" explicitly.
+- Decision (me): ask Bolt to finish it (option A) rather than wiring it up by hand. The unmodified export is committed (`67205b9`) as a record. The zip was identical to the folder, so I deleted it.
+- Wrote `bolt-followup-prompt.md`: two smaller messages (1: no fake data, SQL fixes, router/pages, auth, plans, characters; 2: profile tabs, account page, cleanup).
