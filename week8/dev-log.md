@@ -88,3 +88,22 @@ Timestamps come from `date` on my machine (EDT).
 - Likely cause of the mockup: without a connected database, Bolt filled screens with sample data, and my "don't use Bolt's Supabase integration" line probably pushed it further that way. The prompt was also very large for the free plan's output limit, and it never said "no fake data" explicitly.
 - Decision (me): ask Bolt to finish it (option A) rather than wiring it up by hand. The unmodified export is committed (`67205b9`) as a record. The zip was identical to the folder, so I deleted it.
 - Wrote `bolt-followup-prompt.md`: two smaller messages (1: no fake data, SQL fixes, router/pages, auth, plans, characters; 2: profile tabs, account page, cleanup).
+
+## 2026-11-02 19:13 EST: Phase 3: second Bolt export (after the follow-up prompts)
+- I sent both follow-up messages in the same Bolt chat and exported again.
+- This time it's a real app: router plus one page per screen, an auth store, real Supabase auth, and every screen reads and writes Supabase with no sample data. All three SQL fixes were made. It builds with no type errors.
+- Saved unmodified as commit `575e4eb` (zip identical to the folder, deleted).
+- I ran the SQL migration in the Supabase SQL editor: success on the first try.
+- Key: I used the new **publishable** key (not the legacy anon key, which retires in early 2027). Checked directly with Bolt's pinned supabase-js 2.45.4: reads, sign-up (signup trigger creates the profile and Free subscription) and RLS-checked inserts all work.
+- **V3 first ran against the real database: 2026-11-02 ~19:20 EST.**
+- Problem (browser test): **a reload while signed in redirected to /login.** Root cause: `App.vue` and the router guard both call `loadAuth()`, and the second call returned at once because of a `started` flag, before the session had loaded. Fix: all callers await one shared promise.
+- Problem (browser test): **horizontal scroll at phone width (18px).** Root cause: the 🌿/🔥 corner spans were outside the positioned `.frame`, so they were placed against the page. Fix: moved them into `.frame`, added phone offsets, and set `overflow-x: clip` on `.app-shell`. Two wrong guesses first:
+  - `overflow-x: hidden` on `.app-shell` didn't clip them, because it isn't their containing block
+  - on `body` it only stopped manual scrolling; the page was still wider than the screen
+- Looking at screenshots also showed that the corner marks had **never been visible** in Bolt's version (they were off-screen). The same fix restored them.
+- Wrote 12 direct API checks (no Vue app, like an attacker calling Supabase): plan limit 403, **24 parallel inserts → exactly 10**, RLS isolation (read/update/delete/plant/move), signed-out access, locked subscriptions/plans tables, change_plan validation/history/downgrade, CHECK constraints, 50-attribute limit, cascade delete, profile column permissions.
+- 11/12 passed at first. Problem: **a user could overwrite their own `profiles.email`.** Root cause: Supabase grants authenticated users UPDATE on every column of new tables, so Bolt's `GRANT UPDATE(display_name)` restricted nothing. Fix: `REVOKE UPDATE` first, then grant display_name only (appended to the migration). I ran the fix SQL; afterwards 12/12 pass and the plan limit still works.
+- **All V3 core features working and verified: 2026-11-02 ~19:35 EST.** 13/13 browser checks and 12/12 API checks pass, and the build is clean. The API checks are now in the repo as `npm run test:api`.
+- Not done: mutation-testing the race (it would mean breaking the live trigger). Noted in the README.
+- Wrote `version3-vue-bolt/README.md` (how V3 differs, setup, tests, how Bolt was prompted, manual fixes, known issues). Bolt's own short README stays in `project/`.
+- **Phase 3 done; stopping for my approval.**

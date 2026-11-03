@@ -4,14 +4,19 @@ import { isSupabaseConfigured, supabase } from '../lib/supabase'
 import type { Plan, Profile } from '../lib/types'
 
 export const auth = reactive({ loading: true, session: null as Session | null, user: null as User | null, profile: null as Profile | null, plan: null as Plan | null })
-let started = false
+// manual fix: App.vue and the router guard both call loadAuth() on page load. the second call used to
+// return right away (with no session yet), so a reload while signed in redirected to /login.
+// every caller now waits for the same in-flight load.
+let loading: Promise<void> | null = null
 
-export async function loadAuth() {
-  if (started || !isSupabaseConfigured) { auth.loading = false; return }
-  started = true
-  const { data } = await supabase.auth.getSession()
-  await syncSession(data.session)
-  supabase.auth.onAuthStateChange((_event, session) => { void syncSession(session) })
+export function loadAuth() {
+  if (!isSupabaseConfigured) { auth.loading = false; return Promise.resolve() }
+  loading ??= (async () => {
+    const { data } = await supabase.auth.getSession()
+    await syncSession(data.session)
+    supabase.auth.onAuthStateChange((_event, session) => { void syncSession(session) })
+  })()
+  return loading
 }
 
 async function syncSession(session: Session | null) {

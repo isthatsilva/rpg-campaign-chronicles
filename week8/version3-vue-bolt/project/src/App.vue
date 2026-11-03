@@ -11,8 +11,9 @@ async function logout() { await signOut(); await router.push('/login') }
 
 <template>
   <div class="app-shell">
-    <span class="corner-mark corner-top">🌿</span><span class="corner-mark corner-bottom">🔥</span>
     <main class="frame">
+      <!-- manual fix: moved inside .frame so the corners sit on the frame (they were off-screen at the page corners) -->
+      <span class="corner-mark corner-top">🌿</span><span class="corner-mark corner-bottom">🔥</span>
       <div v-if="!isSupabaseConfigured" class="config-screen"><div class="sigil">✦</div><div class="eyebrow">The chronicle keeper</div><h1>Supabase is not configured</h1><p>Copy <strong>.env.example</strong> to <strong>.env</strong>, then add your Supabase URL and anon key to connect your chronicles.</p></div>
       <template v-else>
         <header v-if="route.path !== '/login' && route.path !== '/register'" class="site-header">
