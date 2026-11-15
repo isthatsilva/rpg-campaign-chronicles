@@ -107,3 +107,22 @@ Timestamps come from `date` on my machine (EDT).
 - Not done: mutation-testing the race (it would mean breaking the live trigger). Noted in the README.
 - Wrote `version3-vue-bolt/README.md` (how V3 differs, setup, tests, how Bolt was prompted, manual fixes, known issues). Bolt's own short README stays in `project/`.
 - **Phase 3 done; stopping for my approval.**
+
+## 2026-11-02 19:40 EST: V3 moved out of `project/`
+- Bolt exported into `version3-vue-bolt/project/`. Moved the files up one level to match V1/V2 (commit `1846a60`), and kept Bolt's own short README as `README.bolt.md`. Re-checked after the move: build, 12/12 API checks, 13/13 browser checks.
+- Added a "How to run everything" section with macOS and Windows commands to the root README (`4b02aad`).
+
+## 2026-11-15 16:32 EST: Phase 4 (final check and writeup)
+- Decided (me): no changes to V3 before the final check, with a clean re-run in a fresh clone (so my working copy is untouched), and partner credit limited to what git and dev-log show.
+- **Clean re-run:** cloned the GitHub repo into a scratch folder at `4b02aad` and followed only the READMEs (fresh `npm install`, a fresh venv, `.env` from `.env.example` with a new `SESSION_SECRET`; the V3 `.env` was copied from my working copy without printing it). Results:
+  - V1: 19/19 tests, 11/11 browser checks, single-port mode OK
+  - V2: 19/19 pytest, 11/11 browser checks, single-port mode OK
+  - V3: clean `vue-tsc` build, 12/12 `test:api`, 12/12 browser checks
+- The scratchpad browser scripts from earlier sessions had been wiped, so I rewrote them. Two first-run failures were test-script mistakes, not app bugs: `getByLabel('Health')` also matched "Max health", and a "deleted" check ran while the dialog still showed the name.
+- npm 12 now warns that it skipped install scripts (fsevents). This is harmless: fsevents is an optional macOS file watcher.
+- Problem found: V2 README's single-port command (`cd ../server && python run.py`) fails in a fresh terminal because the venv isn't active. Fixed in the README.
+- Problem found (screenshots): **V3's custom-attribute rows and journal Edit/Delete links are unstyled** ("Sanity ShakenEditRemove" runs together). Root cause: Bolt's `CharacterDetailPage.vue` uses `inline-record`, `inline-add` and `record-actions`, which `style.css` never defines. The browser tests passed because everything works; it only looks wrong. Not fixed (I'd decided on no V3 changes), but added to V3's known issues.
+- Screenshots: V2 and V3 now have `docs/screenshots/` (plans, dashboard, profile overview, journal) like V1, captured during the clean re-run.
+- Added an "Environment configuration" section to V3's README, a rubric item it only covered inside Setup.
+- Filled in `writeup.md` (Name/SUNet ID/hours left as TODO). It has a who-did-what section and metrics taken from this log.
+- **Phase 4 done; stopping for final review.**

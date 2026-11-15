@@ -61,7 +61,7 @@ with `403 AirTunes`. Requests to `localhost:5000` never reach Flask.
 
 ```bash
 cd week8/version2-react-flask/client && npm run build
-cd ../server && python run.py
+cd ../server && source venv/bin/activate && python run.py
 ```
 
 Open **http://localhost:5001**. When `client/dist` exists, Flask serves the built React app as well as the API.

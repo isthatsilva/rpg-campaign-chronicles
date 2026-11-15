@@ -49,6 +49,17 @@ Other differences:
    npm install
    ```
 
+## Environment configuration
+
+`.env` (copy from `.env.example`; never committed):
+
+| Variable | Required | Purpose |
+|---|---|---|
+| `VITE_SUPABASE_URL` | yes | Project URL, e.g. `https://xxxx.supabase.co` (Project Settings → API Keys) |
+| `VITE_SUPABASE_ANON_KEY` | yes | The **publishable** key (`sb_publishable_…`) or the legacy anon key. It's safe in the browser because RLS protects every table. Never the secret / service_role key. |
+
+Vite only exposes variables that start with `VITE_`, and they are baked into the build, so restart `npm run dev` after editing `.env`.
+
 ## Run
 
 ```bash
@@ -124,4 +135,5 @@ All 13 checks pass. That script isn't part of this folder; see `../dev-log.md`.
 - Creating or editing a character and its attributes is not atomic: the character is saved first, then its attributes. If the second step fails, the page says so, but the character stays saved.
 - The 50-attribute limit isn't locked against simultaneous inserts, so parallel requests could slightly exceed it (unlike the plan limit).
 - Deleting an attribute uses the browser's `confirm()` dialog instead of the styled modal.
+- On the character profile, the custom-attribute rows and the Edit/Delete links on journal entries are unstyled ("Sanity ShakenEditRemove" runs together, and the add-attribute inputs show as a plain bar). Root cause: Bolt's markup in `CharacterDetailPage.vue` uses the classes `inline-record`, `inline-add` and `record-actions`, but `style.css` has no rules for them. Found in the Phase 4 screenshots (`docs/screenshots/profile-overview.jpg`). Everything still works; it only looks wrong.
 - No password reset, login rate limiting beyond Supabase's defaults, or account deletion (same scope as V1/V2).
