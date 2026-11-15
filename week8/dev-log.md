@@ -139,5 +139,6 @@ Timestamps come from `date` on my machine (EDT).
   - with the migration call disabled, both new tests fail
   - my local V2 database had 17 characters without attributes, now backfilled; V1 had none
 - V3: same prefill in `CharacterEditPage.vue`. The backfill is a separate SQL file (`202611150001_backfill_dnd_defaults.sql`) to run once in the Supabase SQL editor; I can't run SQL with the publishable key.
+  - I ran it. The first "success" changed nothing: an older test account still had 12 empty characters, probably because a different query or only part of the text ran. After I re-ran the whole file, all 12 have the six defaults (checked by signing in as that account).
 - Browser check on all 3 versions: the form opens with the six defaults; removing Charisma, changing Strength to 15 and adding Sanity saves exactly that; the edit form doesn't re-add defaults. The full flow checks (V1/V2/V3), V3's 12 API checks and V3's build still pass.
 - Test-script mistakes along the way, not app bugs: clicking the first "Edit" hit an attribute's Edit button (V1/V2's character Edit is a link); V3's flow filled an attribute placeholder that now matches 7 inputs.
