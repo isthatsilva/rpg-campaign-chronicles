@@ -9,18 +9,18 @@ Fill out all of the `TODO`s in this file.
 
 ## Submission Details
 
-Name: **TODO** \
+Name: **David Silva, Benjamin Acosta** \
 SUNet ID: **TODO** \
-Citations: **bolt.new** (generated Version 3 from `bolt-prompt.md` and `bolt-followup-prompt.md`); **Claude Code** (AI pair programmer: wrote Versions 1 and 2, and reviewed, tested and fixed Version 3); **Supabase** (hosted Postgres, Auth and Row Level Security for Version 3); our own earlier vanilla HTML/CSS/JS front end, "Realm Forge" (its `style.css` is reused unchanged in Versions 1 and 2, and Bolt was given its colors and fonts for Version 3; the original folder was removed from the repo after the build and is still in git history).
+Citations: **bolt.new** (generated Version 3 from `bolt-prompt.md` and `bolt-followup-prompt.md`); **Claude Code** (AI pair programmer: wrote Versions 1 and 2, and reviewed, tested and fixed Version 3); **Supabase** (hosted Postgres, Auth and Row Level Security for Version 3); our own earlier vanilla HTML/CSS/JS front end, "Realm Forge" (its `style.css` is reused unchanged in Versions 1 and 2, and Bolt was given its colors and fonts for Version 3; Versions 2 and 3 later got their own color themes; the original folder was removed from the repo after the build and is still in git history).
 
-This assignment took me about **TODO** hours to do. 
+This assignment took us about **10** hours to do. 
 
 ### Team: who did what
-- **Partner (GitHub: GalaxyResonance-BA):**
+- **Benjamin Acosta (GitHub: GalaxyResonance-BA):**
   - created the shared GitHub repo and uploaded the week 8 files (Oct 30)
   - copied the Version 1 React client into `version2-react-flask/client/` (Nov 2)
   - wrote the first draft of `bolt-prompt.md` (Nov 2)
-- **Me (with Claude Code):**
+- **David Silva (GitHub: isthatsilva, with Claude Code):**
   - planned the app and made the design decisions (plans, auth, which fields to keep)
   - built Versions 1 and 2 with Claude Code, including the Flask server and all tests
   - ran bolt.new and set up the Supabase project (SQL migration, auth settings, keys) for Version 3

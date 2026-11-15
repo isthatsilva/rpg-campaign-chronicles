@@ -168,3 +168,6 @@ Timestamps come from `date` on my machine (EDT).
   - adding while an edit is open, then saving the edit, gives Strength 15 and Sanity once, with no duplicates, after a reload
 - Against Bolt's original file, the test fails at the first check ("add-name input must stay empty while editing"), so it really catches the bug.
 - Regression: V3 full flow, 12/12 `test:api`, and a clean build.
+
+## 2026-11-15 17:55 EST: writeup names and hours
+- Writeup: names are David Silva and Benjamin Acosta (GalaxyResonance-BA), and the team section uses names. SUNet ID left as TODO (my choice). Hours set to about 10, an estimate: the logged sessions add up to roughly 6 hours (Oct 28 ~1.5 h, Nov 2 ~2.75 h, Nov 15 ~1.5 h), plus the Bolt runs, Supabase setup, my own testing and Benjamin's work.
