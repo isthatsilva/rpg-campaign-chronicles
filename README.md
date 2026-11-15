@@ -15,7 +15,7 @@ Never commit `.env` files, databases, `node_modules/` or `venv/` (see `.gitignor
 ## How to run everything
 
 Each block below has a **macOS** version (Terminal, zsh/bash) and a **Windows** version (PowerShell).
-Every command starts from the repo's root folder (the one containing this README; `rpg-campaign-chronicles` after a fresh `git clone`). Run `git pull` first.
+Every command starts from the repo's root folder (the one containing this README). Run `git pull` first.
 
 - Servers keep running until you press **Ctrl+C**, so each one needs its own terminal window or tab.
 - V1, V2 and V3 all serve the app on port **5173**, so run one version at a time.
