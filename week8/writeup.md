@@ -192,10 +192,12 @@ a. Issues encountered per stack and how you resolved them:
     - RLS isolation, locked tables, CHECK constraints, cascade delete
   - Known issues left as-is, listed in the README:
     - empty stats show as 0
-    - editing an attribute on the profile also fills the "add attribute" inputs (Bolt used one shared draft object)
-  - Later fixes and changes (my requests): styled the attribute rows and journal links, which were unstyled
-    because Bolt used CSS classes it never defined (found in the Phase 4 screenshots); and swapped V3's colors
-    from V1's purple to emerald, so all three versions look different.
+  - Later fixes and changes (my requests):
+    - styled the attribute rows and journal links, which were unstyled because Bolt used CSS classes it never
+      defined (found in the Phase 4 screenshots)
+    - fixed editing an attribute also filling the "add attribute" inputs (Bolt shared one draft object between
+      the two rows)
+    - swapped V3's colors from V1's purple to emerald, so all three versions look different
     - attribute saves aren't atomic
     - deleting an attribute uses window.confirm
 

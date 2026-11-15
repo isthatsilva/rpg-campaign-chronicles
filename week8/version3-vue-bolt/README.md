@@ -137,6 +137,10 @@ All 13 checks pass. That script isn't part of this folder; see `../dev-log.md`.
 7. **Color theme (my request, 2026-11-15):** V3 used the same purple/gold as V1, because Bolt was given V1's color tokens. Every
    purple/indigo value in `style.css` was swapped for an emerald one, so V1 is purple, V2 crimson and V3 emerald. Gold, the reds and
    the greys are unchanged, and so is the layout. Comment at the top of `style.css`.
+8. **Editing an attribute also filled the "add attribute" inputs** (found in the theme screenshots). Root cause: Bolt's
+   `CharacterDetailPage.vue` used one `attributeDraft` object for both the add row and the row being edited, so clicking **+ Add**
+   mid-edit would add a copy. Fix: a separate `editDraft` for the row being edited. A browser test checks that the two don't mirror
+   each other, and that adding and editing at the same time saves both with no duplicates; against Bolt's original file it fails.
 
 ## Known issues / limitations
 
@@ -146,7 +150,4 @@ All 13 checks pass. That script isn't part of this folder; see `../dev-log.md`.
 - Creating or editing a character and its attributes is not atomic: the character is saved first, then its attributes. If the second step fails, the page says so, but the character stays saved.
 - The 50-attribute limit isn't locked against simultaneous inserts, so parallel requests could slightly exceed it (unlike the plan limit).
 - Deleting an attribute uses the browser's `confirm()` dialog instead of the styled modal.
-- On the character profile, editing an attribute also fills the "add attribute" inputs with the same text. Root cause: Bolt's
-  `CharacterDetailPage.vue` uses one `attributeDraft` object for both the add row and the row being edited, so clicking **+ Add**
-  mid-edit would add a copy. Found in the theme screenshots.
 - No password reset, login rate limiting beyond Supabase's defaults, or account deletion (same scope as V1/V2).

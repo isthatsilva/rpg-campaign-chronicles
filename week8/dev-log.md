@@ -158,3 +158,13 @@ Timestamps come from `date` on my machine (EDT).
 - Checked and not a bug: right after a full reload, the header briefly shows the email until the profile loads. The display name is saved (read back from the database).
 - Problem along the way: V2's servers from the theme check were still running, so V3's Vite started on 5174 and the test hit V2 on 5173. Stopped them and re-ran.
 - Checked: V3 full flow (12/12), the build, phone width (no sideways scroll), and screenshots. Refreshed `version3-vue-bolt/docs/screenshots/`.
+
+## 2026-11-15 17:45 EST: V3 shared attribute draft fixed
+- Decided (me): fix the bug, don't push yet.
+- Fix: `CharacterDetailPage.vue` now has a separate `editDraft` for the row being edited. `attributeDraft` is used only by the add row (checked by counting every use of each).
+- New browser test (scratchpad):
+  - editing Strength leaves the add row empty
+  - typing in both rows at once doesn't mirror
+  - adding while an edit is open, then saving the edit, gives Strength 15 and Sanity once, with no duplicates, after a reload
+- Against Bolt's original file, the test fails at the first check ("add-name input must stay empty while editing"), so it really catches the bug.
+- Regression: V3 full flow, 12/12 `test:api`, and a clean build.
