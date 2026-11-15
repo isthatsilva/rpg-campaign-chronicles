@@ -130,6 +130,13 @@ All 13 checks pass. That script isn't part of this folder; see `../dev-log.md`.
 5. **Feature change (my request, 2026-11-15):** the create form starts with the six D&D attributes at 10, which the user can change,
    remove or add to (`CharacterEditPage.vue`). Existing characters with no attributes were backfilled once with
    `supabase/migrations/202611150001_backfill_dnd_defaults.sql`.
+6. **Unstyled attribute rows (found in the Phase 4 screenshots):** the custom-attribute rows ran together ("Sanity ShakenEditRemove"),
+   the add-attribute inputs fell back to browser defaults, and journal Edit/Delete links were squashed together. Root cause: Bolt's
+   `CharacterDetailPage.vue` uses the classes `inline-record`, `inline-add` and `record-actions`, but `style.css` never defined them.
+   Fix: added those rules at the end of `style.css`.
+7. **Color theme (my request, 2026-11-15):** V3 used the same purple/gold as V1, because Bolt was given V1's color tokens. Every
+   purple/indigo value in `style.css` was swapped for an emerald one, so V1 is purple, V2 crimson and V3 emerald. Gold, the reds and
+   the greys are unchanged, and so is the layout. Comment at the top of `style.css`.
 
 ## Known issues / limitations
 
@@ -139,5 +146,7 @@ All 13 checks pass. That script isn't part of this folder; see `../dev-log.md`.
 - Creating or editing a character and its attributes is not atomic: the character is saved first, then its attributes. If the second step fails, the page says so, but the character stays saved.
 - The 50-attribute limit isn't locked against simultaneous inserts, so parallel requests could slightly exceed it (unlike the plan limit).
 - Deleting an attribute uses the browser's `confirm()` dialog instead of the styled modal.
-- On the character profile, the custom-attribute rows and the Edit/Delete links on journal entries are unstyled ("Sanity ShakenEditRemove" runs together, and the add-attribute inputs show as a plain bar). Root cause: Bolt's markup in `CharacterDetailPage.vue` uses the classes `inline-record`, `inline-add` and `record-actions`, but `style.css` has no rules for them. Found in the Phase 4 screenshots (`docs/screenshots/profile-overview.jpg`). Everything still works; it only looks wrong.
+- On the character profile, editing an attribute also fills the "add attribute" inputs with the same text. Root cause: Bolt's
+  `CharacterDetailPage.vue` uses one `attributeDraft` object for both the add row and the row being edited, so clicking **+ Add**
+  mid-edit would add a copy. Found in the theme screenshots.
 - No password reset, login rate limiting beyond Supabase's defaults, or account deletion (same scope as V1/V2).

@@ -149,3 +149,12 @@ Timestamps come from `date` on my machine (EDT).
 - Design problem: crimson main buttons would look like the red Delete buttons. Fix: Edit buttons are amber, and Delete/danger buttons are outlined red and fill only on hover.
 - First screenshots showed the dashboard character card still slate blue (`.char-card` was missed); added it. Checked by listing every remaining V1-palette color in both stylesheets.
 - Checked: full V2 flow (11/11), the build, phone width (no sideways scroll), and screenshots of the form, dashboard, profile, plans and delete dialog. Refreshed `version2-react-flask/docs/screenshots/`. V1 and V3 untouched.
+
+## 2026-11-15 17:30 EST: V3 gets an emerald color theme, and its unstyled rows are fixed
+- Request (me): change V3's colors as well (V3 used V1's purple/gold because Bolt was given V1's tokens). Chose "emerald forest", and also fixing the unstyled attribute rows.
+- V3's colors are hard-coded hex values throughout `style.css` (no variables), so I swapped them one for one: each purple/indigo value maps to an emerald one. Gold, the danger reds and the neutral greys are unchanged. Afterwards no purple/indigo values remain.
+- Added the missing `.inline-record`, `.inline-add` and `.record-actions` rules. The first screenshot showed each attribute's Edit sitting lower than its Remove, because Bolt's `.detail-card .text-link{margin-top:15px}` also applied there; overrode it. Measured afterwards: 0px offset.
+- Problem found (screenshots): **editing an attribute also fills the "add attribute" inputs.** Root cause: one shared `attributeDraft` object. Logged as a known issue; asking before fixing, since it's logic, not colors.
+- Checked and not a bug: right after a full reload, the header briefly shows the email until the profile loads. The display name is saved (read back from the database).
+- Problem along the way: V2's servers from the theme check were still running, so V3's Vite started on 5174 and the test hit V2 on 5173. Stopped them and re-ran.
+- Checked: V3 full flow (12/12), the build, phone width (no sideways scroll), and screenshots. Refreshed `version3-vue-bolt/docs/screenshots/`.
