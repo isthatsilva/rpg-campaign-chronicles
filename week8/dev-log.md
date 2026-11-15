@@ -177,3 +177,13 @@ Timestamps come from `date` on my machine (EDT).
 - After the rename, the first V1 `npm test` had 1 failure; 30 runs after it (including 6 in parallel) all passed. Root cause: the 2-process race test picked random ports, and the second range (4950–5249) includes **5000**, where macOS AirPlay listens. A server started on 5000 still prints "listening", but requests to `localhost:5000` reach AirPlay and get 403s. So about 1 run in 300, half the creates got 403s that looked like plan-limit rejections, and the count assertion failed. Verified by running the server on 5000: "listening", then `GET /api/plans` → 403. Not related to the rename.
 - Fix (test only): ask the OS for two free, distinct ports, like V2's `_free_port()` already does. 10/10 runs pass.
 - The rename broke V2's `venv`: a venv stores its absolute path, so `python` no longer finds Flask. Node projects (V1, V3, V2 client) are unaffected; builds and tests pass.
+
+## 2026-11-15 18:47 EST: small V3 fixes to match V1/V2
+- Request (me): fix the small V3 known issues. Left out the two that need new database functions (all-or-nothing character + attribute saves, and locking the 50-attribute limit).
+- Fixes:
+  - **Empty stats:** shown as nothing instead of 0 (no "LVL 0", "0/0 vitality", "0 XP"). The display rules match V1/V2 and live in one helper (`src/lib/stats.ts`). A character with no stats says "No stats recorded yet."
+  - **Negative health:** current health accepts -1,000,000 to 1,000,000; max health, level and experience still must be 0 or more. Removed `inputmode="numeric"` from Health, because phone number pads often have no minus key.
+  - **At the plan limit:** "You've used all 10 slots on the Free plan. Delete a character or upgrade your plan to create another." The limit now only counts once the plan has loaded; before, a 0 limit briefly pointed Create at /plans.
+  - **Removing an attribute:** uses the styled dialog ("Keep it" / "Remove attribute") instead of `window.confirm`.
+- New browser test (scratchpad) for all four: it fails on the old code at the first check, and passes now. Test-script mistakes along the way: V3's Health label wraps its input, so an exact label match failed, and the header text is uppercase in the browser.
+- Regression: V3 full flow, the D&D-defaults and attribute-draft tests, 12/12 `test:api` and the build all pass.

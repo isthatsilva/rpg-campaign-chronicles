@@ -141,13 +141,15 @@ All 13 checks pass. That script isn't part of this folder; see `../dev-log.md`.
    `CharacterDetailPage.vue` used one `attributeDraft` object for both the add row and the row being edited, so clicking **+ Add**
    mid-edit would add a copy. Fix: a separate `editDraft` for the row being edited. A browser test checks that the two don't mirror
    each other, and that adding and editing at the same time saves both with no duplicates; against Bolt's original file it fails.
+9. **Small fixes to match V1/V2 (my request, 2026-11-15)**, each checked in a browser test that fails on the old code:
+   - empty stats stay empty: no "LVL 0", "0/0 vitality" or "0 XP" (`src/lib/stats.ts`, `CharactersPage.vue`, `CharacterDetailPage.vue`)
+   - current health may be negative, from -1,000,000 to 1,000,000, as the database already allowed (`CharacterEditPage.vue`)
+   - at exactly the plan limit, a sentence explains why Create leads to the plans page (`CharactersPage.vue`). The limit also
+     only counts once the plan has loaded; before, a 0 limit briefly pointed Create at `/plans`
+   - removing an attribute uses the styled dialog instead of the browser's `confirm()` popup (`CharacterDetailPage.vue`)
 
 ## Known issues / limitations
 
-- A character with no health entered shows "0/0 vitality", and an empty level shows "LVL 0". Bolt displays null as 0 (V1/V2 hide empty stats).
-- Health is validated as "0 or more" in the form, although the database (like V1/V2) allows negative current health.
-- On the dashboard at exactly the plan limit, the Create button turns into a link to `/plans` without saying why. V1/V2 show a sentence explaining it. The over-limit warning banner does work.
 - Creating or editing a character and its attributes is not atomic: the character is saved first, then its attributes. If the second step fails, the page says so, but the character stays saved.
 - The 50-attribute limit isn't locked against simultaneous inserts, so parallel requests could slightly exceed it (unlike the plan limit).
-- Deleting an attribute uses the browser's `confirm()` dialog instead of the styled modal.
 - No password reset, login rate limiting beyond Supabase's defaults, or account deletion (same scope as V1/V2).

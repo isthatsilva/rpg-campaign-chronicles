@@ -190,16 +190,18 @@ a. Issues encountered per stack and how you resolved them:
   - Wrote 12 direct API checks that act like an attacker calling Supabase without the app:
     - plan limit 403, and 24 parallel inserts give exactly 10 characters
     - RLS isolation, locked tables, CHECK constraints, cascade delete
-  - Known issues left as-is, listed in the README:
-    - empty stats show as 0
   - Later fixes and changes (my requests):
     - styled the attribute rows and journal links, which were unstyled because Bolt used CSS classes it never
       defined (found in the Phase 4 screenshots)
     - fixed editing an attribute also filling the "add attribute" inputs (Bolt shared one draft object between
       the two rows)
     - swapped V3's colors from V1's purple to emerald, so all three versions look different
-    - attribute saves aren't atomic
-    - deleting an attribute uses window.confirm
+    - small fixes to match V1/V2: empty stats stay empty instead of showing as 0, current health may be
+      negative, a sentence explains why Create leads to the plans page at exactly the limit, and removing
+      an attribute uses the styled dialog instead of the browser's confirm() popup
+  - Known issues left as-is, listed in the README:
+    - saving a character and its attributes isn't all-or-nothing
+    - the 50-attribute limit isn't locked against simultaneous inserts
 
 b. Prompting (e.g. what required additional guidance; what worked poorly/wel):
   - Worked well:

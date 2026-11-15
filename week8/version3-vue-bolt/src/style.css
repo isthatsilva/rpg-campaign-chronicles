@@ -26,3 +26,6 @@
 .inline-record input,.inline-add input{display:block;width:100%;background:#061a14;border:1px solid #047857;color:#f8fafc;padding:9px 11px;outline:0}
 .inline-record input:focus,.inline-add input:focus{border-color:#34d399}
 @media(max-width:760px){.inline-add{grid-template-columns:1fr 1fr}.inline-add .small-button{grid-column:1/-1}}
+/* manual change: sentence under the heading at exactly the plan limit, explaining why Create leads to /plans */
+.limit-note{margin:-8px 0 20px;font-size:14px}
+.limit-note a{color:var(--gold);font-weight:700}
