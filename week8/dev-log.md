@@ -130,3 +130,14 @@ Timestamps come from `date` on my machine (EDT).
 ## 2026-11-15 16:46 EST: repo cleanup before the final push
 - Decided (me): remove what the submission doesn't need: `rpg-character-creator/` (the original vanilla frontend; V1/V2 keep a copy of its `style.css`), `RPG_Campaign_Chronicles.md` (the requirements doc), `week8-prompt.md` (the working rules) and `resume-prompt.md`. This overrides my earlier "never delete rpg-character-creator/" rule. All of them remain in git history (last present in `0b161f7`).
 - Updated the references in the root README, writeup and V1 README. Older dev-log entries still name these files as they were at the time.
+
+## 2026-11-15 16:50 EST: D&D defaults on every new character (all versions)
+- Request (me): new characters shouldn't start blank; they start with the D&D attributes, and the user can still add or delete them. Decided: prefill the create form (no server-side fallback), and backfill existing characters that have no attributes. AI profile pictures: asked about them, decision postponed (it needs a paid image API or a third-party service, a server-side key, and image storage).
+- V1/V2 (shared client): the create form starts with Strength, Dexterity, Constitution, Intelligence, Wisdom and Charisma, each 10. "Use D&D defaults" still re-adds any that were removed.
+- V1/V2 backfill: a one-time migration in `db.js` / `db.py`, tracked in SQLite's `PRAGMA user_version`, so each database file gets it once (including my partner's). Running it on every start would have re-added the defaults to characters whose owner deliberately removed them all.
+  - new tests: `migrations.test.js` / `test_migrations.py`; 20/20 in each version
+  - with the migration call disabled, both new tests fail
+  - my local V2 database had 17 characters without attributes, now backfilled; V1 had none
+- V3: same prefill in `CharacterEditPage.vue`. The backfill is a separate SQL file (`202611150001_backfill_dnd_defaults.sql`) to run once in the Supabase SQL editor; I can't run SQL with the publishable key.
+- Browser check on all 3 versions: the form opens with the six defaults; removing Charisma, changing Strength to 15 and adding Sanity saves exactly that; the edit form doesn't re-add defaults. The full flow checks (V1/V2/V3), V3's 12 API checks and V3's build still pass.
+- Test-script mistakes along the way, not app bugs: clicking the first "Edit" hit an attribute's Edit button (V1/V2's character Edit is a link); V3's flow filled an attribute placeholder that now matches 7 inputs.

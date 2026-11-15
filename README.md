@@ -118,8 +118,8 @@ V2 uses port 5001 because macOS's AirPlay Receiver occupies 5000. Windows uses 5
 
 | Version | macOS | Windows (PowerShell) | What it runs |
 |---|---|---|---|
-| V1 | `cd week8/version1-react-express/server`<br>`npm test` | `cd week8\version1-react-express\server`<br>`npm test` | 19 API tests (node:test + supertest) |
-| V2 | `cd week8/version2-react-flask/server`<br>`source venv/bin/activate`<br>`pytest` | `cd week8\version2-react-flask\server`<br>`.\venv\Scripts\Activate.ps1`<br>`pytest` | 19 API tests (pytest) |
+| V1 | `cd week8/version1-react-express/server`<br>`npm test` | `cd week8\version1-react-express\server`<br>`npm test` | 20 API tests (node:test + supertest) |
+| V2 | `cd week8/version2-react-flask/server`<br>`source venv/bin/activate`<br>`pytest` | `cd week8\version2-react-flask\server`<br>`.\venv\Scripts\Activate.ps1`<br>`pytest` | 20 API tests (pytest) |
 | V3 | `cd week8/version3-vue-bolt`<br>`npm run test:api` | `cd week8\version3-vue-bolt`<br>`npm run test:api` | 12 checks against the real Supabase project (creates 3 throwaway accounts per run) |
 
 Everything was developed and tested on macOS. The Windows commands are the standard equivalents but haven't been run on Windows yet.

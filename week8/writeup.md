@@ -40,7 +40,8 @@ RPG Campaign Chronicles: a system-neutral tabletop RPG character manager with a 
   simultaneous requests. A downgrade below your current count keeps every character but blocks new ones.
 - Characters (the primary resource, full CRUD): only the name is required. Species, role, level, health/max
   health, experience, powers & abilities and backstory are optional. Each character has:
-    - custom attributes (any name/value pairs, e.g. "Sanity = Shaken", or one-click D&D defaults)
+    - custom attributes: any name/value pairs (e.g. "Sanity = Shaken"). New characters start with the six
+      D&D attributes (Strength through Charisma, each 10), which the user can change, remove or add to
     - equipment (name, type, quantity, description)
     - a session journal (date, campaign, title, players, events, rewards, notes)
   Deleting a character asks for confirmation and removes its attributes, equipment and journal too.
@@ -67,7 +68,7 @@ Persistence: SQLite file (server/data/app.db) through Node's built-in node:sqlit
 Frameworks/Libraries Used:
   - client: React 19.3, React Router 7.18, Vite 8.3
   - server: Express 5.3, bcryptjs 3.0 (password hashing), dotenv
-  - tests: node:test + supertest 7.3 (19 API tests); Playwright (headless Chrome) for the UI click-through
+  - tests: node:test + supertest 7.3 (20 API tests); Playwright (headless Chrome) for the UI click-through
 (Optional but recommended) Screenshots of core flows: version1-react-express/docs/screenshots/
   (login, plans, dashboard, create-character, profile-overview, equipment, journal, account, downgrade-warning)
 
@@ -116,7 +117,7 @@ Persistence: SQLite file (server/data/app.db) through Python's built-in sqlite3,
 Frameworks/Libraries Used:
   - client: React 19.3, React Router 7.18, Vite 8.3 (the Version 1 client unchanged except the proxy port)
   - server: Flask 3.1.3, bcrypt 5.0.0, python-dotenv 1.2.4, Python 3.11+ in a venv
-  - tests: pytest 9.2.0 (19 API tests); Playwright for the UI click-through
+  - tests: pytest 9.2.0 (20 API tests); Playwright for the UI click-through
 (Optional but recommended) Screenshots of core flows: version2-react-flask/docs/screenshots/
   (plans, dashboard, profile-overview, profile-journal)
 

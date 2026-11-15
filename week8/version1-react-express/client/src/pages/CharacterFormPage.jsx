@@ -103,7 +103,8 @@ export default function CharacterFormPage() {
     const isEdit = Boolean(characterId);
     const navigate = useNavigate();
     const [form, setForm] = useState(EMPTY);
-    const [attributes, setAttributes] = useState([]);
+    // new characters start with the d&d defaults; the user can change, remove or add before saving
+    const [attributes, setAttributes] = useState(() => (isEdit ? [] : DND_DEFAULTS.map((name) => ({ name, value: '10' }))));
     const [errors, setErrors] = useState({});
     const [message, setMessage] = useState('');
     const [loading, setLoading] = useState(isEdit);

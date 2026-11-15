@@ -15,9 +15,33 @@ export function openDatabase(databasePath) {
     db.exec('PRAGMA busy_timeout = 5000');
     // the transaction makes a second process starting at the same moment wait instead of
     // racing us through CREATE TABLE / INSERT
-    withWriteTransaction(db, () => db.exec(fs.readFileSync(schemaPath, 'utf8')));
+    withWriteTransaction(db, () => {
+        db.exec(fs.readFileSync(schemaPath, 'utf8'));
+        runMigrations(db);
+    });
     if (databasePath !== ':memory:') enableWal(db);
     return db;
+}
+
+// one-time data migrations, tracked in sqlite's user_version so each runs once per database file.
+// (a character whose owner later removes every attribute must not get the defaults back on restart.)
+const BACKFILL_DND_DEFAULTS = `
+    INSERT INTO character_attributes (character_id, name, value, position)
+    SELECT c.id, d.name, '10', d.position
+    FROM characters c
+    CROSS JOIN (SELECT 'Strength' AS name, 0 AS position UNION ALL SELECT 'Dexterity', 1
+                UNION ALL SELECT 'Constitution', 2 UNION ALL SELECT 'Intelligence', 3
+                UNION ALL SELECT 'Wisdom', 4 UNION ALL SELECT 'Charisma', 5) d
+    WHERE NOT EXISTS (SELECT 1 FROM character_attributes a WHERE a.character_id = c.id)
+    ORDER BY c.id, d.position`;
+
+function runMigrations(db) {
+    const { user_version: version } = db.prepare('PRAGMA user_version').get();
+    if (version < 1) {
+        // 1: characters created before the form prefilled the d&d defaults get them once
+        db.exec(BACKFILL_DND_DEFAULTS);
+        db.exec('PRAGMA user_version = 1');
+    }
 }
 
 // switching to wal ignores busy_timeout, so retry briefly if another process holds the file.

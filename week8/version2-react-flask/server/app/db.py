@@ -32,9 +32,32 @@ def init_database(database_path):
             if conn.in_transaction:
                 conn.execute("ROLLBACK")
             raise
+        with write_transaction(conn):
+            _run_migrations(conn)
         _enable_wal(conn)
     finally:
         conn.close()
+
+
+# one-time data migrations, tracked in sqlite's user_version so each runs once per database file.
+# (a character whose owner later removes every attribute must not get the defaults back on restart.)
+BACKFILL_DND_DEFAULTS = """
+    INSERT INTO character_attributes (character_id, name, value, position)
+    SELECT c.id, d.name, '10', d.position
+    FROM characters c
+    CROSS JOIN (SELECT 'Strength' AS name, 0 AS position UNION ALL SELECT 'Dexterity', 1
+                UNION ALL SELECT 'Constitution', 2 UNION ALL SELECT 'Intelligence', 3
+                UNION ALL SELECT 'Wisdom', 4 UNION ALL SELECT 'Charisma', 5) d
+    WHERE NOT EXISTS (SELECT 1 FROM character_attributes a WHERE a.character_id = c.id)
+    ORDER BY c.id, d.position"""
+
+
+def _run_migrations(conn):
+    version = conn.execute("PRAGMA user_version").fetchone()[0]
+    if version < 1:
+        # 1: characters created before the form prefilled the d&d defaults get them once
+        conn.execute(BACKFILL_DND_DEFAULTS)
+        conn.execute("PRAGMA user_version = 1")
 
 
 # switching to wal ignores the busy timeout, so retry briefly if another process holds the file.

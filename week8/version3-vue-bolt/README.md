@@ -37,6 +37,7 @@ Other differences:
 
 1. **Database:** in the Supabase dashboard, open **SQL Editor → New query**, paste the whole of
    `supabase/migrations/202611020001_create_rpg_chronicles.sql`, and run it. Re-running it is safe: it uses `IF NOT EXISTS`, `CREATE OR REPLACE` and `DROP ... IF EXISTS`.
+   Then run `supabase/migrations/202611150001_backfill_dnd_defaults.sql` **once**. It gives existing characters with no attributes the six D&D defaults. On a brand-new project it does nothing, and it shouldn't be re-run later (it would refill characters whose owner removed every attribute).
 2. **Auth settings:** in **Authentication**, turn off **Confirm email**, so registration signs you in immediately, and set the minimum password length to 8.
 3. **Keys:** copy `.env.example` to `.env` and fill in:
    - `VITE_SUPABASE_URL`: your Project URL
@@ -126,6 +127,9 @@ All 13 checks pass. That script isn't part of this folder; see `../dev-log.md`.
    anything, because Supabase already grants authenticated users UPDATE on every column of new tables. Fix: `REVOKE UPDATE` on the table
    first, then grant `display_name` only (appended to the migration).
 4. Added `tests/api-check.mjs` and the `test:api` script.
+5. **Feature change (my request, 2026-11-15):** the create form starts with the six D&D attributes at 10, which the user can change,
+   remove or add to (`CharacterEditPage.vue`). Existing characters with no attributes were backfilled once with
+   `supabase/migrations/202611150001_backfill_dnd_defaults.sql`.
 
 ## Known issues / limitations
 

@@ -11,7 +11,7 @@ so either backend can serve the same frontend.
 | Backend | Python 3.11+ / Flask 3.1 (`server/`) |
 | Database | SQLite via Python's built-in `sqlite3`, stored in `server/data/app.db`; same `schema.sql` as V1 |
 | Auth | `bcrypt`-hashed passwords, httpOnly session cookie backed by a `sessions` table |
-| Tests | `pytest`, 19 tests (ports of V1's tests, plus a threaded-server race test) |
+| Tests | `pytest`, 20 tests (ports of V1's tests, plus a threaded-server race test) |
 | Built with | Claude Code (AI pair programmer) |
 
 ## Prerequisites
@@ -75,7 +75,7 @@ source venv/bin/activate
 pytest
 ```
 
-19 tests, ported one-to-one from V1, so both backends are checked against the same behavior:
+20 tests, ported one-to-one from V1, so both backends are checked against the same behavior:
 - **Auth (`test_auth.py`):**
   - registration hashes passwords with bcrypt
   - duplicate email returns 409 (case-insensitive)
@@ -98,6 +98,7 @@ pytest
   - cascade delete
   - per-field 400 validation (impossible dates, negative or fractional or boolean quantities)
   - invalid JSON returns 400, wrong content type 415, oversized body 413, bad ids and unknown routes 404, all without stack traces
+- **Migration (`test_migrations.py`):** an older database's characters with no attributes get the D&D defaults once, and only once
 
 **Checking that the race tests can fail:** with the `BEGIN IMMEDIATE` lock temporarily removed from `db.write_transaction`, the
 two-process test failed (18 characters created on a 10-character plan). The single-process threaded test still passed, because
@@ -124,7 +125,7 @@ warning and over-limit dashboard. All 11 checks pass. That script isn't part of 
 
 ## Features and API
 
-Identical to Version 1. See `../version1-react-express/README.md` for the feature list and the API table.
+Identical to Version 1. See `../version1-react-express/README.md` for the feature list and the API table. That includes the D&D defaults prefilled on the create form and the one-time backfill for older characters (`app/db.py`).
 
 ## Project structure
 

@@ -10,7 +10,7 @@ characters, custom attributes, equipment and session journals.
 | Backend | Node.js + Express 5 (`server/`) |
 | Database | SQLite through Node's built-in `node:sqlite` module, stored in `server/data/app.db` |
 | Auth | bcrypt-hashed passwords (`bcryptjs`), httpOnly session cookie backed by a `sessions` table |
-| Tests | `node:test` + `supertest` (API tests), 19 tests |
+| Tests | `node:test` + `supertest` (API tests), 20 tests |
 | Built with | Claude Code (AI pair programmer) |
 
 ## Prerequisites
@@ -71,12 +71,13 @@ cd week8/version1-react-express/server
 npm test
 ```
 
-19 API tests covering:
+20 API tests covering:
 - **Auth:** hashing, duplicate email (409), password rules, identical 401 for wrong password and unknown email, logout invalidating the session server-side, and 401 on every protected route.
 - **Ownership isolation:** user B gets 404 for every read/update/delete on user A's characters, attributes, equipment and journal, including mixing B's own character id with A's item ids.
 - **Plan limits:** 11th character on Free → 403, plan validation and history, downgrade keeps data but blocks creates, and a **concurrency test with 2 separate server processes sharing one DB file firing 24 parallel creates: exactly 10 succeed**.
 - **Cascade delete:** a character's attributes, equipment and journal rows are gone after deleting it.
 - **Validation:** 400 with per-field messages, impossible dates, invalid JSON, wrong content type (415), bad ids (404), no stack traces.
+- **Migration:** an older database's characters with no attributes get the D&D defaults once; removing them all afterwards stays removed after a restart.
 
 The UI was also tested end-to-end in headless Chrome (Playwright): every flow from register → plan → characters
 → attributes/equipment/journal CRUD → delete → account → logout/login, plus the plan-limit and downgrade screens and phone width.
@@ -110,7 +111,8 @@ That script isn't part of this folder; see `../dev-log.md`.
   A downgrade below your current count keeps all characters, blocks new ones, and shows a warning.
 - **Account page:** plan, status, "3 of 10 slots used · 7 remaining" meter.
 - **Characters:** only the name is required. Species, role, level, health/max health, experience, powers & abilities and backstory are optional and free text, with no D&D lock-in.
-- **Custom attributes:** any name/value pairs (e.g. Sanity = "Shaken"), plus an optional "Use D&D defaults" button.
+- **Custom attributes:** any name/value pairs (e.g. Sanity = "Shaken"). The create form starts with the six D&D attributes (Strength, Dexterity, Constitution, Intelligence, Wisdom, Charisma, each 10), which the user can change, remove or add to; "Use D&D defaults" re-adds any that were removed.
+  Characters created before this change got the same six once, on the first server start after updating (a one-time migration tracked in SQLite's `user_version`, in `src/db.js`).
 - **Equipment:** item name, type, quantity, description, with add/edit/remove.
 - **Journal (per character):** session date, campaign, title, players, events, rewards, notes, with add/edit/delete.
   Two characters in the same campaign keep separate journals.
