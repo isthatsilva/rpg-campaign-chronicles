@@ -171,3 +171,9 @@ Timestamps come from `date` on my machine (EDT).
 
 ## 2026-11-15 17:55 EST: writeup names and hours
 - Writeup: names are David Silva and Benjamin Acosta (GalaxyResonance-BA), and the team section uses names. SUNet ID left as TODO (my choice). Hours set to about 10, an estimate: the logged sessions add up to roughly 6 hours (Oct 28 ~1.5 h, Nov 2 ~2.75 h, Nov 15 ~1.5 h), plus the Bolt runs, Supabase setup, my own testing and Benjamin's work.
+
+## 2026-11-15 18:15 EST: folder renamed; flaky V1 race test fixed
+- I moved to my own repo (https://github.com/isthatsilva/rpg-campaign-chronicles) and renamed the local folder to `rpg-campaign-chronicles`.
+- After the rename, the first V1 `npm test` had 1 failure; 30 runs after it (including 6 in parallel) all passed. Root cause: the 2-process race test picked random ports, and the second range (4950–5249) includes **5000**, where macOS AirPlay listens. A server started on 5000 still prints "listening", but requests to `localhost:5000` reach AirPlay and get 403s. So about 1 run in 300, half the creates got 403s that looked like plan-limit rejections, and the count assertion failed. Verified by running the server on 5000: "listening", then `GET /api/plans` → 403. Not related to the rename.
+- Fix (test only): ask the OS for two free, distinct ports, like V2's `_free_port()` already does. 10/10 runs pass.
+- The rename broke V2's `venv`: a venv stores its absolute path, so `python` no longer finds Flask. Node projects (V1, V3, V2 client) are unaffected; builds and tests pass.

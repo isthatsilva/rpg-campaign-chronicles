@@ -2,12 +2,24 @@ import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
 import fs from 'node:fs';
+import net from 'node:net';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { makeApp, registerUser, createCharacter, TEST_SECRET } from './helpers.js';
 
 const serverEntry = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../src/server.js');
+
+// asks the os for a port nobody is using. random ports used to hit 5000 now and then, which macOS's
+// AirPlay receiver holds, so one server failed to start and the race test failed (about 1 run in 300).
+function freePort() {
+    return new Promise((resolve, reject) => {
+        const probe = net.createServer().once('error', reject).listen(0, () => {
+            const { port } = probe.address();
+            probe.close(() => resolve(port));
+        });
+    });
+}
 
 describe('plans and character limits', () => {
     test('free plan blocks the 11th character with 403', async () => {
@@ -81,7 +93,8 @@ describe('plans and character limits', () => {
     test('parallel creates across two server processes sharing one database never exceed the limit', { timeout: 30000 }, async () => {
         const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'rcc-race-'));
         const dbPath = path.join(dir, 'race.db');
-        const ports = [4600 + Math.floor(Math.random() * 300), 4950 + Math.floor(Math.random() * 300)];
+        const ports = [await freePort()];
+        do ports[1] = await freePort(); while (ports[1] === ports[0]);
         const procs = ports.map((port) => spawn(process.execPath, [serverEntry], {
             env: { ...process.env, PORT: String(port), DATABASE_PATH: dbPath, SESSION_SECRET: TEST_SECRET, BCRYPT_ROUNDS: '4' },
             stdio: ['ignore', 'pipe', 'pipe'],
