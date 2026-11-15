@@ -1,0 +1,46 @@
+/* version 2 only: "crimson ember" color theme, so v2 is easy to tell apart from v1.
+   loaded after style.css and app.css and only overrides colors; layout and fonts are unchanged. */
+
+:root {
+    --primary: #dc2626;
+    --primary-hover: #b91c1c;
+    --bg-dark: #0c0405;
+    --bg-card: #2a0f12;
+    --text-main: #fafaf9;
+    --text-muted: #a8a29e;
+    --accent: #f59e0b;
+    --danger: #ef4444;
+    --border: #7f1d1d;
+    --magic-glow: rgba(220, 38, 38, 0.35);
+}
+
+body {
+    background-image:
+        radial-gradient(circle at 50% 50%, rgba(127, 29, 29, 0.35) 0%, transparent 70%),
+        url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h100v100H0z' fill='none'/%3E%3Cpath d='M0 0L100 100M100 0L0 100' stroke='%232a0f12' stroke-width='0.5'/%3E%3C/svg%3E");
+}
+
+.magic-border {
+    background-image: linear-gradient(135deg, rgba(42, 15, 18, 0.85) 0%, rgba(18, 8, 9, 0.92) 100%);
+}
+
+/* dark warm surfaces instead of v1's slate blue */
+input, select, textarea, .log-entry, .usage-bar { background: #170a0b; }
+.price-card { background: rgba(23, 10, 11, 0.9); }
+.stat-chip, .char-card { background: rgba(23, 10, 11, 0.8); }
+.modal-overlay { background: rgba(12, 4, 5, 0.82); }
+.btn-secondary { background-color: #44403c; }
+.btn-secondary:hover { background-color: #57534e; }
+.tab.active, .tab:hover { background: rgba(220, 38, 38, 0.18); }
+.attr-display { border-bottom-color: rgba(127, 29, 29, 0.5); }
+.tag { background: rgba(220, 38, 38, 0.3); }
+
+/* main actions are crimson now, so edit and delete need their own look:
+   edit is amber, and delete is outlined until hovered, so it never reads as a main button */
+.btn-edit, .btn-link.btn-edit { background-color: var(--accent); color: #1c0a00; }
+.btn-delete, .btn-danger {
+    background-color: transparent;
+    border: 1px solid var(--danger);
+    color: #fca5a5;
+}
+.btn-delete:hover, .btn-danger:hover { background-color: var(--danger); color: white; }

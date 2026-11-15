@@ -115,7 +115,8 @@ AI app generation platform: Claude Code (AI pair programmer), same phase-by-phas
 Tech Stack: React SPA (Vite) + Python/Flask REST API + SQLite (non-JavaScript backend)
 Persistence: SQLite file (server/data/app.db) through Python's built-in sqlite3, using the same schema.sql as Version 1
 Frameworks/Libraries Used:
-  - client: React 19.3, React Router 7.18, Vite 8.3 (the Version 1 client unchanged except the proxy port)
+  - client: React 19.3, React Router 7.18, Vite 8.3 (the Version 1 client, plus its own crimson color theme
+    and the proxy port)
   - server: Flask 3.1.3, bcrypt 5.0.0, python-dotenv 1.2.4, Python 3.11+ in a venv
   - tests: pytest 9.2.0 (20 API tests); Playwright for the UI click-through
 (Optional but recommended) Screenshots of core flows: version2-react-flask/docs/screenshots/
@@ -138,7 +139,8 @@ a. Issues encountered per stack and how you resolved them:
 
 b. Prompting (e.g. what required additional guidance; what worked poorly/wel):
   - What made V2 fast: "same API contract, same schema.sql, port V1's tests" plus Version 1's README as the
-    spec. The React client didn't need any changes beyond the proxy port.
+    spec. The React client only needed the proxy port changed. Later, at my request, V2 got its own
+    "crimson ember" color theme (one extra CSS file) so it doesn't look identical to V1.
   - Needed guidance:
     - which Python version to target (3.11+, even though the machine has 3.14)
     - that the client should be reused rather than rewritten

@@ -1,13 +1,14 @@
 # RPG Campaign Chronicles: Version 2 (React + Flask + SQLite)
 
 The same app as Version 1, with the Express backend rewritten in **Python / Flask**. The React client is
-Version 1's client, unchanged except for where its dev server forwards `/api` (Flask on port 5001).
+Version 1's client with two changes: its dev server forwards `/api` to Flask on port 5001, and a "crimson ember" color
+theme (`client/src/styles/theme-v2.css`) so the two versions are easy to tell apart.
 The API contract (URLs, JSON shapes, status codes, error format) and the SQLite schema are identical,
 so either backend can serve the same frontend.
 
 | | |
 |---|---|
-| Frontend | React 19 + React Router 7, built with Vite 8 (`client/`, shared with V1) |
+| Frontend | React 19 + React Router 7, built with Vite 8 (`client/`, V1's client with its own color theme) |
 | Backend | Python 3.11+ / Flask 3.1 (`server/`) |
 | Database | SQLite via Python's built-in `sqlite3`, stored in `server/data/app.db`; same `schema.sql` as V1 |
 | Auth | `bcrypt`-hashed passwords, httpOnly session cookie backed by a `sessions` table |
@@ -158,6 +159,9 @@ version2-react-flask/
 - Express's `express.json()` behavior is reproduced by hand: only objects and arrays are accepted, and `NaN`/`Infinity` are rejected
   as invalid JSON (Python's `json` module would otherwise accept them).
 - A 405 (known URL, wrong method) is reported as 404 `NOT_FOUND`, matching V1.
+- **Look:** same layout and fonts as V1, but a crimson/amber color theme instead of V1's purple/gold. `theme-v2.css` is loaded after
+  the shared stylesheets and only overrides colors: crimson main buttons, amber Edit buttons, and outlined Delete buttons
+  (filled on hover), so a destructive button never looks like a main action. The original `style.css` is still unchanged.
 
 ## Known issues / limitations
 
