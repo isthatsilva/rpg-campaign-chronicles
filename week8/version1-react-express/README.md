@@ -160,6 +160,8 @@ version1-react-express/
 
 ## Deviations from the requirements doc
 
+The requirements doc (`RPG_Campaign_Chronicles.md`) was removed from the repo after the build; it's still in git history.
+
 - **Sessions table added** (not in the suggested schema) so logins are server-side and logout really revokes them.
 - **Extra columns:** `characters.max_health` (to show "42/50"), `characters.abilities` (keeps the original "Powers & Abilities" field),
   `created_at`/`updated_at` timestamps, `plans.sort_order`, `character_attributes.position`.

@@ -11,7 +11,7 @@ Fill out all of the `TODO`s in this file.
 
 Name: **TODO** \
 SUNet ID: **TODO** \
-Citations: **bolt.new** (generated Version 3 from `bolt-prompt.md` and `bolt-followup-prompt.md`); **Claude Code** (AI pair programmer: wrote Versions 1 and 2, and reviewed, tested and fixed Version 3); **Supabase** (hosted Postgres, Auth and Row Level Security for Version 3); the original front-end design in `rpg-character-creator/` (our own earlier project; its `style.css` is reused unchanged in Versions 1 and 2, and Bolt was given its colors and fonts for Version 3).
+Citations: **bolt.new** (generated Version 3 from `bolt-prompt.md` and `bolt-followup-prompt.md`); **Claude Code** (AI pair programmer: wrote Versions 1 and 2, and reviewed, tested and fixed Version 3); **Supabase** (hosted Postgres, Auth and Row Level Security for Version 3); our own earlier vanilla HTML/CSS/JS front end, "Realm Forge" (its `style.css` is reused unchanged in Versions 1 and 2, and Bolt was given its colors and fonts for Version 3; the original folder was removed from the repo after the build and is still in git history).
 
 This assignment took me about **TODO** hours to do. 
 
@@ -59,7 +59,8 @@ and Vue + Supabase (generated with bolt.new).
 APP DETAILS:
 ===============
 Folder name: version1-react-express
-AI app generation platform: Claude Code (AI pair programmer in the terminal), driven by a phase-by-phase prompt (week8-prompt.md)
+AI app generation platform: Claude Code (AI pair programmer in the terminal), driven by a phase-by-phase prompt
+  (week8-prompt.md, removed from the repo at the end and still in git history)
 Tech Stack: JavaScript end to end: React SPA (Vite) + Node.js/Express REST API + SQLite
 Persistence: SQLite file (server/data/app.db) through Node's built-in node:sqlite module. 7 tables with
   ON DELETE CASCADE and foreign keys on, plus a sessions table for logins.

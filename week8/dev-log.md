@@ -126,3 +126,7 @@ Timestamps come from `date` on my machine (EDT).
 - Added an "Environment configuration" section to V3's README, a rubric item it only covered inside Setup.
 - Filled in `writeup.md` (Name/SUNet ID/hours left as TODO). It has a who-did-what section and metrics taken from this log.
 - **Phase 4 done; stopping for final review.**
+
+## 2026-11-15 16:46 EST: repo cleanup before the final push
+- Decided (me): remove what the submission doesn't need: `rpg-character-creator/` (the original vanilla frontend; V1/V2 keep a copy of its `style.css`), `RPG_Campaign_Chronicles.md` (the requirements doc), `week8-prompt.md` (the working rules) and `resume-prompt.md`. This overrides my earlier "never delete rpg-character-creator/" rule. All of them remain in git history (last present in `0b161f7`).
+- Updated the references in the root README, writeup and V1 README. Older dev-log entries still name these files as they were at the time.
